@@ -3,6 +3,7 @@ import re
 symbols = r'()[]{},;=.+-*/&|~<>'
 comment=r'(?:(\/\*(.|\n)*?\*\/)|(//.*))'
 delimiters = r'([\(\)\[\]\{\}\,\;\=\.\+\-\*\/\&\|\~\<\>]|(?:"[^"]*")| *)'
+delim = re.compile('([\(\)\[\]\{\}\,\;\=\.\+\-\*\/\&\|\~\<\>]|(?:"[^"]*")| *)')
 keywords = ('class','constructor','method','function','int','boolean','char','void','var','static','field','let','do','if','else','while','return','true','false','null','this')
 
 class JackTokenizer(object):
@@ -12,14 +13,22 @@ class JackTokenizer(object):
 		self.token=None
 		fin=open(inputFile,"r+")
 		self.inp=fin.read()
-		print(self.inp)
 		self.inp = " ".join(re.sub(comment,"",self.inp).split()) 
 		self.tokenList=[token for token in re.split(delimiters,self.inp) if token not in ('', ' ')]
-		# print(self.tokenList)
+		print(self.tokenList)
 		# for token in self.inp:
 		# 	if(token not in ('', ' ')):
 		# 		self.tokenList = re.split(delimiters, self.inp)
 		
+		#split up by words, but still have delimiters in them
+		# with open(inputFile, 'r') as file:
+		# 	for line in file:
+		# 		for word in line.split():
+		# 			print(type(word))
+		# 			if delim.match(word):
+		# 				print(word)
+
+		#this makes each token its own list, which is not what we want
 		# self.tokenList = []
 		# print(self.inp)
 		# for token in self.inp:
