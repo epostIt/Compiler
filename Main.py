@@ -8,7 +8,7 @@ import sys
 import ErrorWriting
 
 # input=sys.argv[1]
-input = '/Users/susanpost/Desktop/Compiler/11/Average/Main.jack'
+input = '/Users/Elisabeth/Desktop/Compilers/Compiler/error.jack'
 fileList=[]
 if os.path.isdir(input):
     if input.endswith('/'):

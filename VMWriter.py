@@ -9,6 +9,8 @@ class VMWriter(object):
             if segment == "field":
                 self.vm.write('push this %d\n' %(index)) 
             else:
+                # print("Segment: " + segment)
+                # print("Index; " + str(index))
                 self.vm.write('push %s %d\n' %(segment, index)) 
 
         def writePop(self, segment, index):

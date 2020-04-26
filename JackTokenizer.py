@@ -1,47 +1,32 @@
 import re
-
+import fileinput
 symbols = r'()[]{},;=.+-*/&|~<>'
 comment=r'(?:(\/\*(.|\n)*?\*\/)|(//.*))'
 delimiters = r'([\(\)\[\]\{\}\,\;\=\.\+\-\*\/\&\|\~\<\>]|(?:"[^"]*")| *)'
 delim = re.compile('([\(\)\[\]\{\}\,\;\=\.\+\-\*\/\&\|\~\<\>]|(?:"[^"]*")| *)')
 keywords = ('class','constructor','method','function','int','boolean','char','void','var','static','field','let','do','if','else','while','return','true','false','null','this')
 
+FILE_PATH = '/Users/Elisabeth/Desktop/Compilers/Compiler/error.jack'
+
 class JackTokenizer(object):
 	
 	def __init__(self, inputFile):
 		self.currLine=-1
 		self.token=None
-		fin=open(inputFile,"r+")
-		self.inp=fin.read()
-		self.inp = " ".join(re.sub(comment,"",self.inp).split()) 
-		self.tokenList=[token for token in re.split(delimiters,self.inp) if token not in ('', ' ')]
-		print(self.tokenList)
-		# for token in self.inp:
-		# 	if(token not in ('', ' ')):
-		# 		self.tokenList = re.split(delimiters, self.inp)
-		
-		#split up by words, but still have delimiters in them
-		# with open(inputFile, 'r') as file:
-		# 	for line in file:
-		# 		for word in line.split():
-		# 			print(type(word))
-		# 			if delim.match(word):
-		# 				print(word)
+		# fin=open(inputFile,"r+")
+		# self.inp=fin.read()
+		# self.inp = " ".join(re.sub(comment,"",self.inp).split()) 
+		# self.tokenList=[token for token in re.split(delimiters,self.inp) if token not in ('', ' ')]
+		self.tokenList = TokenObject.readOneLineAtATime()
+		# for item in self.tokenList:
+    	# 		print("Value: " + str(item.value) + " Line: " + str(item.line))
 
-		#this makes each token its own list, which is not what we want
-		# self.tokenList = []
-		# print(self.inp)
-		# for token in self.inp:
-		# 	if (token not in ('', ' ')):
-		# 		self.tokenList.append(token)
-		# 		# print(token)
-				
-		# print(self.tokenList)
-
-		
 
 	def advance(self):
-		self.token=self.tokenList.pop(0)
+		item = self.tokenList.pop(0)
+		self.token=item.value
+		# self.token = self.tokenList.pop(0)
+		# print(self.token)
 
 	def hasMoreTokens(self):
 		if len(self.tokenList)>0:
@@ -80,17 +65,30 @@ class JackTokenizer(object):
 
 	def stringVal(self):
 		return self.token[1:-1]
-'''		
-j=JackTokenizer('inp.jack')
-while(j.hasMoreTokens()):
-	j.advance()
-	print j.token
-	if j.tokenType()=='INT_CONST':
-		print j.intVal()
-	elif j.tokenType()=='STRING_CONST':
-		print j.stringVal()
-
-'''
-		
 
 
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+class TokenObject:
+    tokenObjectList = []
+
+    def __init__(self, token, line):
+        self.line = line
+        self.value = token
+
+    def breakListIntoTokens(tokenList, line):
+        for token in tokenList:
+            ob = TokenObject(token, line)
+            TokenObject.tokenObjectList.append(ob)
+            # print(ob.line)
+            # print(ob.value)
+    def readOneLineAtATime():
+        totalList = []
+        with fileinput.input(files=(FILE_PATH)) as f:
+            count = 0
+            for line in f:  #read one line of the file in at a toke
+                inp = " ".join(re.sub(comment,"",line).split())
+                tokenList=[token for token in re.split(delimiters,inp) if token not in ('', ' ')] #tokenize that one line
+                count = count + 1
+                TokenObject.breakListIntoTokens(tokenList, count) #objectify one line of tokens 
+
+        return TokenObject.tokenObjectList

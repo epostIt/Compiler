@@ -17,7 +17,9 @@ class CompilationEngine(object):
         self.getNextToken()
 
     def peek(self):
-        return self.tokenizer.tokenList[0]
+        item = self.tokenizer.tokenList[0]
+        return item.value
+        # return self.tokenizer.tokenList[0]
 
     def gettag(self):
         return self.tokenizer.tokenType()
@@ -48,6 +50,7 @@ class CompilationEngine(object):
 
         if(self.getinfo() != '{'):
             print(self.tokenizer.tokenList[0:5]) #####################################################################################################
+            ErrorWriting.printError()
             raise Exception('Missing { : Invalid token: %s'%(self.getinfo()))
 
         self.getNextToken()
@@ -254,12 +257,15 @@ class CompilationEngine(object):
         self.getNextToken()
 
         token=self.getinfo()
+        # print(token)
 
         if not self.gettag() == "IDENTIFIER":
             raise Exception('Wrong variable name %s in let' %(self.getinfo()))
 
         segment = self.table.KindOf(token)
+        # print("segment:" + segment) #segment is being properly set
         index= self.table.IndexOf(token)
+        # print("Index: "+ str(index))
         self.getNextToken()
 
         if self.getinfo() == '[' :

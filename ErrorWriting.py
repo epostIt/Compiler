@@ -9,10 +9,11 @@ class ErrorWriting():
 
 
     @staticmethod# function that searches for the string causing a problem and finds the line number it is on
-    def printError(stringLookingFor, error):
-        with fileinput.input(files=(FILE_PATH)) as f:
-            for line in f:
-                if stringLookingFor in line:
-                    if not checkIfLineIsComment(line):
-                        print("ERROR:" + error + " - Line " +
-                              str(fileinput.lineno()) + ": " + line)
+    def printError(expected, recieved, lineNumber):
+        f = open("ErrorFile.txt", "a")
+        f.write("ERROR:" + error + " - Line " + str(fileinput.lineno()) + ": " + line + "\n")
+        f.close()
+
+    @staticmethod
+    def printLine(lineNumber):
+        
