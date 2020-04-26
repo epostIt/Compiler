@@ -14,13 +14,7 @@ class JackTokenizer(object):
 	def __init__(self, inputFile):
 		self.currLine=-1
 		self.token=None
-		# fin=open(inputFile,"r+")
-		# self.inp=fin.read()
-		# self.inp = " ".join(re.sub(comment,"",self.inp).split()) 
-		# self.tokenList=[token for token in re.split(delimiters,self.inp) if token not in ('', ' ')]
 		self.tokenList = TokenObject.readOneLineAtATime()
-		for item in self.tokenList:
-			print(item.value)
 		# for item in self.tokenList:
     	# 		print("Value: " + str(item.value) + " Line: " + str(item.line))
 

@@ -3,6 +3,7 @@ class Main {
      
       var int i;
       let i = 0;
-      let i = i + 1;
+      let i= i + 1;
+      let i--;
    }
 }

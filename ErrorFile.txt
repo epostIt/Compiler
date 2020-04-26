@@ -18,4 +18,29 @@ Line:       let i = 0;
 
 Compiling: Let
 Expecting: =
-Found: +
+Found: +/Users/Elisabeth/Desktop/Compilers/Compiler/error.jack
+Line: class Main {
+
+Compiling: Class
+Expecting: }
+Found: class/Users/Elisabeth/Desktop/Compilers/Compiler/error.jack
+Line:       let i=i+1;
+
+Compiling: Let
+Expecting: =
+Found: -/Users/Elisabeth/Desktop/Compilers/Compiler/error.jack
+Line:       let i=i+1;
+
+Compiling: Let
+Expecting: =
+Found: -/Users/Elisabeth/Desktop/Compilers/Compiler/error.jack
+Line:       let i=i+1;
+
+Compiling: Let
+Expecting: =
+Found: -/Users/Elisabeth/Desktop/Compilers/Compiler/error.jack
+Line: class Main {
+
+Compiling: Class
+Expecting: }
+Found: class

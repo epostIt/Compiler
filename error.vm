@@ -5,3 +5,7 @@ push local 0
 push constant 1
 add
 pop local 0
+push local 0
+push constant 1
+sub
+pop local 0

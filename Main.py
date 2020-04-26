@@ -10,11 +10,19 @@ import fileinput
 
 # input=sys.argv[1]
 input = '/Users/Elisabeth/Desktop/Compilers/Compiler/error.jack'
+
+#if any other variable besides i uses increment, this needs to be updated
 with fileinput.FileInput(input, inplace=True, backup='.bak') as file:
         for line in file:
-            print(line.replace('++', '=i+1'), end='')
+            print(line.replace('++', '= i + 1'), end='')
+        file.close()
 
-            
+with fileinput.FileInput(input, inplace=True, backup='.bak') as file:
+        for line in file:
+            print(line.replace('--', '= i - 1'), end='')
+        file.close()
+
+
 fileList=[]
 if os.path.isdir(input):
     if input.endswith('/'):
