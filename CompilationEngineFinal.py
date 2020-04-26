@@ -31,16 +31,19 @@ class CompilationEngine(object):
         if self.tokenizer.hasMoreTokens():
             self.tokenizer.advance()
         else:
+            ErrorWriting.printUnknownError(self)
             raise Exception("Too less tokens to parse after %s"% self.getinfo())
 
 
     def CompileClass(self):
         #print "Compiling class..."
         if(self.getinfo() != 'class'):
+            ErrorWriting.printKnownError("class", self, "Class", self.getinfo())
             raise Exception('No class in given file: Invalid token \'%s\''%(self.getinfo()))
         self.getNextToken()
 
         if(self.gettag() != 'IDENTIFIER'):
+            ErrorWriting.printKnownError("Identifier", self, "Class", self.getinfo())
             raise Exception('Invalid class name: %s'%(self.getinfo()))
 
         className=self.getinfo()
@@ -50,7 +53,7 @@ class CompilationEngine(object):
 
         if(self.getinfo() != '{'):
             print(self.tokenizer.tokenList[0:5]) #####################################################################################################
-            ErrorWriting.printError()
+            ErrorWriting.printKnownError("{", self, "Class", self.getinfo())
             raise Exception('Missing { : Invalid token: %s'%(self.getinfo()))
 
         self.getNextToken()
@@ -62,11 +65,13 @@ class CompilationEngine(object):
             self.CompileSubroutine(className)
 
         if(self.getinfo() != '}'):
+            ErrorWriting.printKnownError("}", self, "Class", self.getinfo())
             raise Exception('Missing } : Invalid token: %s'%(self.getinfo()))
 
     def CompileClassVarDec(self):
         kind=self.getinfo()
         if not kind in ['static','field']:
+            ErrorWriting.printKnownError("Variable type", self, "Class Variable Declaration", self.getinfo())
             raise Exception('Invalid variable kind: %s'%(self.getinfo()))
 
         self.getNextToken()
@@ -74,11 +79,13 @@ class CompilationEngine(object):
         if typ not in self.type:
             #if not self.table.KindOf(typ)=='class':
             if not self.gettag() == "IDENTIFIER":
+                ErrorWriting.printKnownError("Variable type", self, "Class Variable Declaration", typ)
                 raise Exception("Invalid variable type : %s"%typ)
 
         self.getNextToken()
         varName=self.getinfo()
         if not self.gettag()=='IDENTIFIER':
+            ErrorWriting.printKnownError("Valid identifier", self, "Class Variable Declaration", varName)
             raise Exception("Illegal identifier: %s"%varName)
 
         self.table.Define(varName,typ,kind)
@@ -89,11 +96,13 @@ class CompilationEngine(object):
             self.getNextToken()
             varName=self.getinfo()
             if not self.gettag()=='IDENTIFIER':
+                ErrorWriting.printKnownError("Valid identifier", self, "Class Variable Declaration", varName)
                 raise Exception("Illegal identifier: %s"%varName)
             self.table.Define(varName,typ,kind)
             self.getNextToken()
 
         if self.getinfo() != ';':
+            ErrorWriting.printKnownError(";", self, "Class Variable Declaration", "Nothing")
             raise Exception('; Missing!!')
 
         self.getNextToken()
@@ -102,6 +111,7 @@ class CompilationEngine(object):
         #print "Compiling Subroutine..."
         kind = self.getinfo()
         if kind not in self.function:
+            ErrorWriting.printKnownError("Valid function kind", self, "SubRoutine", "kind")
             raise Exception('Illegal function kind: %s' %kind)
 
         self.getNextToken()
@@ -109,9 +119,11 @@ class CompilationEngine(object):
         typ=self.getinfo()
         if typ not in self.type and not typ == 'void':
             if not self.table.KindOf(typ) == 'class':
+                ErrorWriting.printKnownError("Valid return type", self, "SubRoutine", typ)
                 raise Exception("Invalid return type : %s"%typ)
             elif kind == 'constructor':
                 if typ != className:
+                    ErrorWriting.printKnownError("Return type of constructor to be class name", self, "SubRoutine", typ)
                     raise Exception("Return type of constructor has to be class name!")
 
         self.getNextToken()
@@ -121,6 +133,7 @@ class CompilationEngine(object):
         self.functable.adddecfn(self.classname, name)
 
         if not self.gettag()=='IDENTIFIER':
+            ErrorWriting.printKnownError("Valid identifier for function name", self, "SubRoutine", name)
             raise Exception("Illegal identifier for function name: %s"%name)
 
         self.table.Define(name, className, kind)
@@ -128,16 +141,19 @@ class CompilationEngine(object):
         self.getNextToken()
 
         if self.getinfo() != '(':
+            ErrorWriting.printKnownError("(", self, "SubRoutine", self.getinfo())
             raise Exception("Missing ( for function : %s"%name)
         self.getNextToken()
         self.CompileParameterList(kind)
 
         if self.getinfo() != ')':
+            ErrorWriting.printKnownError(")", self, "SubRoutine", self.getinfo())
             raise Exception("Missing ) for function : %s"%name)
 
         self.getNextToken()
 
         if self.getinfo() != '{':
+            ErrorWriting.printKnownError("{", self, "SubRoutine", self.getinfo())
             raise Exception("Missing { for function : %s"%name)
 
         self.getNextToken()
@@ -163,6 +179,7 @@ class CompilationEngine(object):
         #self.getNextToken()
 
         if self.getinfo() != '}':
+            ErrorWriting.printKnownError("}", self, "SubRoutine", self.getinfo())
             raise Exception("Missing } for function : %s"%name)
 
         self.getNextToken()
@@ -181,11 +198,13 @@ class CompilationEngine(object):
 
         if typ not in self.type:
             if not self.gettag() == "IDENTIFIER":
+                ErrorWriting.printKnownError("Argument", self, "SubRoutine", self.getinfo())
                 raise Exception("Invalid argument type of: %s"%(self.getinfo()))
 
         self.getNextToken()
 
         if not self.gettag() == "IDENTIFIER":
+            ErrorWriting.printKnownError("Argument", self, "SubRoutine", self.getinfo())
             raise Exception("Invalid argument name of: %s"%(self.getinfo()))
 
         self.table.Define(self.getinfo(), typ, kind)
@@ -194,15 +213,18 @@ class CompilationEngine(object):
 
         while not self.getinfo() == ')':
             if self.getinfo() != ',':
+                ErrorWriting.printKnownError(",", self, "SubRoutine", self.getinfo())
                 raise Exception("Missing , before %s"%(self.getinfo()))
             self.getNextToken()
             typ=self.getinfo()
             if typ not in self.type:
                 if not self.gettag() == "IDENTIFIER":
+                    ErrorWriting.printKnownError("Valid Argument Type", self, "SubRoutine", self.peek())
                     raise Exception("Invalid argument type of: %s"%(self.peek()))
 
             self.getNextToken()
             if not self.gettag() == "IDENTIFIER":
+                ErrorWriting.printKnownError("Valid argument name", self, "SubRoutine", self.getinfo())
                 raise Exception("Invalid argument name of: %s"%(self.getinfo()))
 
             self.table.Define(self.getinfo(), typ, kind)
@@ -211,6 +233,7 @@ class CompilationEngine(object):
     def CompileVarDec(self):
         #print "Compiling Variable Declaration Statement..."
         if self.getinfo() != 'var':
+            ErrorWriting.printKnownError("Legal Type", self, "Variable Declaration", self.getinfo())
             raise Exception("Illegal type %s"%(self.getinfo()))
 
         self.getNextToken()   
@@ -218,17 +241,20 @@ class CompilationEngine(object):
         typ=self.getinfo()
         if typ not in self.type:
             if not self.gettag() == "IDENTIFIER":
+                ErrorWriting.printKnownError("Valid Type", self, "Variable Declaration", self.getinfo())
                 raise Exception("Invalid type : %s"%(self.getinfo()))
 
         self.getNextToken()
         varName=self.getinfo()
         if not self.gettag() == "IDENTIFIER":
+            ErrorWriting.printKnownError("Variable Name", self, "Variable Declaration", self.getinfo())
             raise Exception("Invalid varname : %s"%(self.getinfo()))
         self.table.Define(varName, typ, 'local')
         self.getNextToken()
 
         while not self.getinfo() == ';':
             if self.getinfo() !=',':
+                ErrorWriting.printKnownError("; or ,", self, "Variable Declaration", self.getinfo())
                 raise Exception(", or ; expected in variable declaration")
             self.getNextToken()
             varName = self.getinfo()
@@ -260,6 +286,7 @@ class CompilationEngine(object):
         # print(token)
 
         if not self.gettag() == "IDENTIFIER":
+            ErrorWriting.printKnownError("Valid Variable Name", self, "Let", self.getinfo())
             raise Exception('Wrong variable name %s in let' %(self.getinfo()))
 
         segment = self.table.KindOf(token)
@@ -273,6 +300,7 @@ class CompilationEngine(object):
             self.CompileExpression()
 
             if(self.getinfo()!=']'):
+                ErrorWriting.printKnownError("]", self, "Let", self.getinfo())
                 raise Exception('Missing ] in let')
 
 
@@ -281,6 +309,7 @@ class CompilationEngine(object):
 
             self.getNextToken()
             if not self.getinfo() == '=' :
+                ErrorWriting.printKnownError("=", self, "Let", self.getinfo())
                 raise Exception('Missing = in let ')
 
             self.getNextToken()
@@ -292,6 +321,7 @@ class CompilationEngine(object):
 
         else:
             if not self.getinfo() == '=' :
+                ErrorWriting.printKnownError("=", self, "Let", self.getinfo())
                 raise Exception('Missing = in let ')
 
             self.getNextToken()
@@ -299,6 +329,7 @@ class CompilationEngine(object):
             self.vm.writePop(segment, index)
 
         if not self.getinfo() == ';' :
+            ErrorWriting.printKnownError(";", self, "Let", self.getinfo())
             raise Exception('Missing ; in let statement')
 
         self.getNextToken()
@@ -309,12 +340,14 @@ class CompilationEngine(object):
         self.getNextToken()
 
         if not self.getinfo() == '(' :
+            ErrorWriting.printKnownError("(", self, "If", self.getinfo())
             raise Exception('Missing ( in if condition ')
 
         self.getNextToken()
         self.CompileExpression()
 
         if not self.getinfo() == ')' :
+            ErrorWriting.printKnownError(")", self, "If", self.getinfo())
             raise Exception('Missing ) in if condition ')
 
 
@@ -329,12 +362,14 @@ class CompilationEngine(object):
         self.getNextToken()
 
         if not self.getinfo() == '{' :
+            ErrorWriting.printKnownError("{", self, "If", self.getinfo())
             raise Exception('Missing { in if body ')
 
         self.getNextToken()
         self.CompileStatements()
 
         if not self.getinfo() == '}' :
+            ErrorWriting.printKnownError("}", self, "If", self.getinfo())
             raise Exception('Missing } in if body ')
 
         self.getNextToken()
@@ -345,12 +380,14 @@ class CompilationEngine(object):
         if self.getinfo() == 'else':
             self.getNextToken()
             if not self.getinfo() == '{' :
+                ErrorWriting.printKnownError("{", self, "Else", self.getinfo())
                 raise Exception('Missing { in else body ')
 
             self.getNextToken()
             self.CompileStatements()
 
             if not self.getinfo() == '}' :
+                ErrorWriting.printKnownError("}", self, "Else", self.getinfo())
                 raise Exception('Missing } in else body ')
 
             self.getNextToken()
@@ -365,6 +402,7 @@ class CompilationEngine(object):
         self.vm.writePop('temp',0)		
 
         if self.getinfo() !=';' :
+            ErrorWriting.printKnownError(";", self, "Do", self.getinfo())
             raise Exception("Missing ; in do statement")
 
         self.getNextToken()
@@ -381,12 +419,14 @@ class CompilationEngine(object):
         self.getNextToken()
 
         if not self.getinfo() == '(' :
+            ErrorWriting.printKnownError("(", self, "While", self.getinfo())
             raise Exception('Missing ( in while loop condition')
 
         self.getNextToken()
         self.CompileExpression()
 
         if not self.getinfo() == ')' :
+            ErrorWriting.printKnownError(")", self, "While", self.getinfo())
             raise Exception('Missing ) in while loop condition')
 
         self.vm.writeArithmetic('not') 
@@ -395,12 +435,14 @@ class CompilationEngine(object):
         self.getNextToken()
 
         if not self.getinfo() == '{' :
+            ErrorWriting.printKnownError("{", self, "While", self.getinfo())
             raise Exception('Missing { in while loop body')
 
         self.getNextToken()
         self.CompileStatements()
 
         if not self.getinfo() == '}' :
+            ErrorWriting.printKnownError("}", self, "While", self.getinfo())
             raise Exception('Missing } in while loop body')
 
         self.vm.writeGoto(loop)
@@ -418,6 +460,7 @@ class CompilationEngine(object):
             self.vm.writePush('constant',0)
 
         if self.getinfo()!=';' :
+            ErrorWriting.printKnownError(";", self, "Return", self.getinfo())
             raise Exception('Missing ; in return statement ')
         self.vm.writeReturn()
 
@@ -428,6 +471,7 @@ class CompilationEngine(object):
             self.getNextToken()
             self.CompileExpression()
             if self.getNextToken() != ')':
+                ErrorWriting.printKnownError(")", self, "Expression", self.getinfo())
                 raise Exception('Missing ) in expression')
 
         else:
@@ -452,6 +496,7 @@ class CompilationEngine(object):
 
         while not self.getinfo() == ')': 
             if self.getinfo()!=',':
+                ErrorWriting.printKnownError(",", self, "Expression List", self.getinfo())
                 raise Exception("Missing , in expression list")
             self.getNextToken()
             nargs=nargs+1
@@ -490,6 +535,7 @@ class CompilationEngine(object):
             elif token == 'this':
                 self.vm.writePush('pointer', 0)             
             else:
+                ErrorWriting.printKnownError("Keyword", self, "Term", token)
                 raise Exception('Unrecognized keyword: %s' %token)
 
         elif token_tag == 'SYMBOL':
@@ -497,6 +543,7 @@ class CompilationEngine(object):
                 self.getNextToken()
                 self.CompileExpression()
                 if self.getinfo() != ')':
+                    ErrorWriting.printKnownError(")", self, "Term", self.getinfo())
                     raise Exception("Missing ) in expression")
 
             elif token in ['-','~']:
@@ -508,6 +555,7 @@ class CompilationEngine(object):
                     self.vm.writeArithmetic('not')
                 return
             else:
+                ErrorWriting.printKnownError("Symbol", self, "Term", token)
                 raise Exception('Unrecognized symbol: %s' %token)
 
         elif token_tag == 'IDENTIFIER':
@@ -532,6 +580,7 @@ class CompilationEngine(object):
                 nargs= self.CompileExpressionList()+1
 
                 if not self.getinfo() == ')' :
+                    ErrorWriting.printKnownError(")", self, "Term", self.getinfo())
                     raise Exception("Missing ) in function call for %s" % name)
                 className = self.classname
                 self.vm.writeCall(className+'.'+name, nargs)
@@ -557,11 +606,13 @@ class CompilationEngine(object):
                     nargs=1
                 self.getNextToken()
                 if not self.getinfo() == '(':
+                    ErrorWriting.printKnownError("(", self, "Term", self.getinfo())
                     raise Exception("Missing ( in function call for %s" % function)
                 self.getNextToken()
 
                 nargs+=self.CompileExpressionList()
                 if not self.getinfo() == ')':
+                    ErrorWriting.printKnownError(")", self, "Term", self.getinfo())
                     raise Exception("Missing ) in function call for %s" % function)
 
                 token_tag = self.table.TypeOf(name)
@@ -578,6 +629,7 @@ class CompilationEngine(object):
                 self.getNextToken()
                 self.CompileExpression()
                 if not self.getinfo() == ']':
+                    ErrorWriting.printKnownError("]", self, "Term", self.getinfo())
                     raise Exception("Missing ] in array element %s" % name)
                 self.vm.writePush(kind,index)
                 self.vm.writeArithmetic('add')  
@@ -586,6 +638,7 @@ class CompilationEngine(object):
             else:
                 self.vm.writePush(kind,index)
         else:
+            ErrorWriting.printKnownError("Term", self, "Term", token_tag)
             raise Exception('Illegal Token: %s' %(token))
         self.getNextToken()
 

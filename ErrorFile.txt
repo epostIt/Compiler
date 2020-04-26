@@ -1,0 +1,5 @@
+/Users/Elisabeth/Desktop/Compilers/Compiler/error.jack
+Line:    function void main() 
+Compiling: SubRoutine
+Expecting: {
+Found: var
