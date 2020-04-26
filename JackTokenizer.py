@@ -39,7 +39,7 @@ class JackTokenizer(object):
 			if(int(self.token)>=0 and int(self.token)<=32767):
 				return('INT_CONST')
 			else:
-				ErrorWriting.printUnknownError(self)
+				ErrorWriting.printUnknownError('Integer constant should be between 0 and 32767, it is %s' % self.token)
 
 				raise Exception('Integer constant should be between 0 and 32767, it is %s' % self.token)
 		elif re.match(r'(?:"[^"]*")', self.token):
@@ -47,7 +47,7 @@ class JackTokenizer(object):
 		elif re.match(r'^[\w\d_]*$', self.token) and not self.token[0].isdigit() and self.token not in keywords:
 			return('IDENTIFIER')
 		else:
-			ErrorWriting.printUnknownError(self)
+			ErrorWriting.printUnknownError('Illegal Token: %s' %self.token)
 			raise Exception('Illegal Token: %s' %self.token)
 
 

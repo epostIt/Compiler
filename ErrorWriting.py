@@ -30,21 +30,13 @@ class ErrorWriting():
                 else:
                     count = count + 1
         
-    def printUnknownError(self):
+    def printUnknownError(error):
         with fileinput.input(files=(FILE_PATH)) as f:
-            lineNumber = self.tokenizer.tokenList[0].line
-            count = 0
-            for line in f:
-                if count == lineNumber:
-                    
-                    f = open("ErrorFile.txt", "a")
-                    f.write(FILE_PATH + "\n")
-                    f.write("Line: " + line + '\n')
-                    f.write("Found: " + self.getinfo())
-                    f.close()
-                    break
-                else:
-                    count = count + 1
+            f = open("ErrorFile.txt", "a")
+            f.write(FILE_PATH + "\n")
+            f.write(error)
+            f.close()
+
 
     # @staticmethod
     # def printLine(lineNumber):

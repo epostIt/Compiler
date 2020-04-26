@@ -31,7 +31,7 @@ class CompilationEngine(object):
         if self.tokenizer.hasMoreTokens():
             self.tokenizer.advance()
         else:
-            ErrorWriting.printUnknownError(self)
+            ErrorWriting.printUnknownError("Missing token to parse after %s"% self.getinfo())
             raise Exception("Too less tokens to parse after %s"% self.getinfo())
 
 
