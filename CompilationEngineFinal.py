@@ -1,7 +1,7 @@
 from ErrorWriting import ErrorWriting
 
 
-vmcode={'=':'eq','+':'add','-':'sub','&':'and','|':'or','~':'not','<':'lt','>':'gt'}
+vmcode={'=':'eq','+':'add','-':'sub','&':'and','|':'or','~':'not','<':'lt','>':'gt','%':'le','$':'ge','!':'ne'}
 
 class CompilationEngine(object):
 
@@ -477,7 +477,9 @@ class CompilationEngine(object):
         else:
             self.CompileTerm()
 
-        while(self.getinfo() in '+-*/&|<>='):
+        while(self.getinfo() in '+-*/&|<>=%!$'):
+            # print(self.getinfo())
+            # print(self.getNextToken())
             token=self.getinfo()
             self.getNextToken()
             self.CompileTerm()
@@ -486,6 +488,8 @@ class CompilationEngine(object):
             elif token == '*':
                 self.vm.writeCall('Math.multiply',2)
             else:
+                # print("here")
+                # print(vmcode[token])
                 self.vm.writeArithmetic(vmcode[token])
 
     def CompileExpressionList(self):

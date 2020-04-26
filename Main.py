@@ -22,6 +22,20 @@ with fileinput.FileInput(input, inplace=True, backup='.bak') as file:
             print(line.replace('--', '= i - 1'), end='')
         file.close()
 
+with fileinput.FileInput(input, inplace=True, backup='.bak') as file:
+        for line in file:
+            print(line.replace('<=', '%'), end='')
+        file.close()
+
+with fileinput.FileInput(input, inplace=True, backup='.bak') as file:
+        for line in file:
+            print(line.replace('>=', '$'), end='')
+        file.close()
+
+with fileinput.FileInput(input, inplace=True, backup='.bak') as file:
+        for line in file:
+            print(line.replace('!=', '!'), end='')
+        file.close()
 
 fileList=[]
 if os.path.isdir(input):

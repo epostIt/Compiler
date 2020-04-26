@@ -3,7 +3,7 @@ import fileinput
 import ErrorWriting
 symbols = r'()[]{},;=.+-*/&|~<>'
 comment=r'(?:(\/\*(.|\n)*?\*\/)|(//.*))'
-delimiters = r'([\(\)\[\]\{\}\,\;\=\.\+\-\*\/\&\|\~\<\>]|(?:"[^"]*")| *)'
+delimiters = r'([\(\)\[\]\{\}\,\;\=\.\+\-\*\/\&\|\~\<\>%!$]|(?:"[^"]*")| *)'
 delim = re.compile('([\(\)\[\]\{\}\,\;\=\.\+\-\*\/\&\|\~\<\>]|(?:"[^"]*")| *)')
 keywords = ('class','constructor','method','function','int','boolean','char','void','var','static','field','let','do','if','else','while','return','true','false','null','this')
 
