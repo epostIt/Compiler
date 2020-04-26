@@ -6,9 +6,15 @@ import VMWriter
 import FuncTable
 import sys 
 import ErrorWriting
+import fileinput
 
 # input=sys.argv[1]
 input = '/Users/Elisabeth/Desktop/Compilers/Compiler/error.jack'
+with fileinput.FileInput(input, inplace=True, backup='.bak') as file:
+        for line in file:
+            print(line.replace('++', '=i+1'), end='')
+
+            
 fileList=[]
 if os.path.isdir(input):
     if input.endswith('/'):
@@ -25,6 +31,7 @@ else:
 fntable = FuncTable.FuncTable()
 
 for file in fileList:
+    
     inpname = file.split('/')[-1].split('.')[0]
     outFile = inpname + '.vm' 
     tokenizer=jt.JackTokenizer(file)
