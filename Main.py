@@ -9,33 +9,33 @@ import ErrorWriting
 import fileinput
 
 # input=sys.argv[1]
-input = '/Users/Elisabeth/Desktop/Compilers/Compiler/error.jack'
+input = '/Users/Elisabeth/Desktop/Compilers/Compiler/s2020x/Map.jack'
 
 #if any other variable besides i uses increment, this needs to be updated
-with fileinput.FileInput(input, inplace=True, backup='.bak') as file:
-        for line in file:
-            print(line.replace('++', '= i + 1'), end='')
-        file.close()
+# with fileinput.FileInput(input, inplace=True) as file:
+#         for line in file:
+#             print(line.replace('++', '= i + 1'), end='')
+#         file.close()
 
-with fileinput.FileInput(input, inplace=True, backup='.bak') as file:
-        for line in file:
-            print(line.replace('--', '= i - 1'), end='')
-        file.close()
+# with fileinput.FileInput(input, inplace=True) as file:
+#         for line in file:
+#             print(line.replace('--', '= i - 1'), end='')
+#         file.close()
 
-with fileinput.FileInput(input, inplace=True, backup='.bak') as file:
-        for line in file:
-            print(line.replace('<=', '%'), end='')
-        file.close()
+# with fileinput.FileInput(input, inplace=True) as file:
+#         for line in file:
+#             print(line.replace('<=', '%'), end='')
+#         file.close()
 
-with fileinput.FileInput(input, inplace=True, backup='.bak') as file:
-        for line in file:
-            print(line.replace('>=', '$'), end='')
-        file.close()
+# with fileinput.FileInput(input, inplace=True) as file:
+#         for line in file:
+#             print(line.replace('>=', '$'), end='')
+#         file.close()
 
-with fileinput.FileInput(input, inplace=True, backup='.bak') as file:
-        for line in file:
-            print(line.replace('!=', '!'), end='')
-        file.close()
+# with fileinput.FileInput(input, inplace=True) as file:
+#         for line in file:
+#             print(line.replace('!=', '!'), end='')
+#         file.close()
 
 fileList=[]
 if os.path.isdir(input):

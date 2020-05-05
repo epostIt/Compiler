@@ -1,7 +1,7 @@
 import fileinput
 import re
 
-FILE_PATH = '/Users/Elisabeth/Desktop/Compilers/Compiler/11/Average/Main.jack'
+# FILE_PATH = '/Users/Elisabeth/Desktop/Compilers/Compiler/11/Average/Main.jack'
 delimiters = r'([\(\)\[\]\{\}\,\;\=\.\+\-\*\/\&\|\~\<\>]|(?:"[^"]*")| *)'
 comment=r'(?:(\/\*(.|\n)*?\*\/)|(//.*))'
 array = ['class', 'Main', '{']

@@ -1,6 +1,6 @@
 import fileinput
 
-FILE_PATH = '/Users/Elisabeth/Desktop/Compilers/Compiler/error.jack'
+FILE_PATH = '/Users/Elisabeth/Desktop/Compilers/Compiler/s2020x/Map.jack'
 class ErrorWriting():
     
     @staticmethod

@@ -7,7 +7,7 @@ delimiters = r'([\(\)\[\]\{\}\,\;\=\.\+\-\*\/\&\|\~\<\>%!$]|(?:"[^"]*")| *)'
 delim = re.compile('([\(\)\[\]\{\}\,\;\=\.\+\-\*\/\&\|\~\<\>]|(?:"[^"]*")| *)')
 keywords = ('class','constructor','method','function','int','boolean','char','void','var','static','field','let','do','if','else','while','return','true','false','null','this')
 
-FILE_PATH = '/Users/Elisabeth/Desktop/Compilers/Compiler/error.jack'
+FILE_PATH = '/Users/Elisabeth/Desktop/Compilers/Compiler/s2020x/Map.jack'
 
 class JackTokenizer(object):
 	
